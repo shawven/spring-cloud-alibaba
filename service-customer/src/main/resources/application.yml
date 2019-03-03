@@ -1,0 +1,27 @@
+server:
+  port: 8082
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
+      datasource:
+        ds1:
+          file:
+            file: "classpath: flowrule.json"
+            data-type: json
+            rule-type: flow
+feign:
+  sentinel:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
