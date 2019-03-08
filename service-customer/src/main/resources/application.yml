@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8051
 
 spring:
   cloud:
@@ -20,8 +20,16 @@ feign:
   sentinel:
     enabled: true
 
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://localhost:8888//uaa/user
+      prefer-token-info: false
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+logging.level.org.springframework.security: DEBUG

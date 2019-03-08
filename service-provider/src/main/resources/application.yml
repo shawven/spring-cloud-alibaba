@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8061
 
 
 spring:
@@ -7,6 +7,13 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://localhost:8888//uaa/user
+      prefer-token-info: false
+
 
 management:
   endpoints:

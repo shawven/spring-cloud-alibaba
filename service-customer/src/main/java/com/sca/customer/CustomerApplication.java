@@ -2,19 +2,29 @@ package com.sca.customer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @EnableDiscoveryClient
 @EnableFeignClients
 @SpringBootApplication
-public class CustomerApplication {
+@EnableResourceServer
+public class CustomerApplication extends ResourceServerConfigurerAdapter {
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/echo-hello2/**", "/echo-hello12/**").permitAll()
+                .and().authorizeRequests().anyRequest().authenticated();
+    }
 
     @FeignClient(name = "service-provider",
             fallback = EchoServiceFallback.class,
@@ -22,6 +32,9 @@ public class CustomerApplication {
     public interface EchoService {
         @RequestMapping(value = "/echo/{str}", method = RequestMethod.GET)
         String echo(@PathVariable("str") String str);
+
+        @RequestMapping(value = "/hello/{str}", method = RequestMethod.GET)
+        String hello(@PathVariable("str") String str);
 
         @RequestMapping(value = "/divide", method = RequestMethod.GET)
         String divide(@RequestParam("a") Integer a, @RequestParam("b") Integer b);
@@ -47,6 +60,11 @@ class EchoServiceFallback implements CustomerApplication.EchoService {
     @Override
     public String echo(@PathVariable("str") String str) {
         return "echo fallback";
+    }
+
+    @Override
+    public String hello(String str) {
+        return "hello fallback";
     }
 
     @Override

@@ -1,0 +1,39 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+zuul:
+  routes:
+    uaa:
+      path: /uaa/**
+      serviceId: auth-server
+      sensitiveHeaders:
+    order:
+      path: /api/customer/**
+      serviceId: service-customer
+      sensitiveHeaders:
+  add-proxy-headers: true
+
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:8888/uaa/oauth/token
+      user-authorization-uri: http://localhost:8888/uaa/oauth/authorize
+      client-id: app
+      client-secret: secret
+    resource:
+      user-info-uri: http://localhost:8888//uaa/user
+      prefer-token-info: false
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+

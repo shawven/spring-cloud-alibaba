@@ -22,6 +22,8 @@
     </properties>
 
     <modules>
+        <module>api-gateway</module>
+        <module>auth-server</module>
         <module>config-example</module>
         <module>service-customer</module>
         <module>service-provider</module>

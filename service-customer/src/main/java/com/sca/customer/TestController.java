@@ -4,19 +4,30 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+
+import java.security.Principal;
 
 /**
  * @author xiaojing
  */
 @RestController
 public class TestController {
-    
+
     @Autowired
     private CustomerApplication.EchoService echoService;
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    @RequestMapping(value = "/test")
+    public String test() {
+        return "4564dfdsff233";
+    }
+
+    @RequestMapping(value = "/user")
+    public Principal user(Principal principal) {
+        return principal;
+    }
 
     @SentinelResource("GET:http://service-provider/echo/{str}")
     @RequestMapping(value = "/echo-rest/{str}", method = RequestMethod.GET)
@@ -25,6 +36,22 @@ public class TestController {
 //                String.class);
          return echoService.echo(str);
     }
+
+    @RequestMapping(value = "/echo-hello1/{str}", method = RequestMethod.GET)
+    public String hello1(@PathVariable String str) {
+//        return restTemplate.getForObject("http://service-provider/echo/" + str,
+//                String.class);
+        return echoService.hello(str);
+    }
+
+    @RequestMapping(value = "/echo-hello2/{str}", method = RequestMethod.GET)
+    public String hello2(@PathVariable String str) {
+//        return restTemplate.getForObject("http://service-provider/echo/" + str,
+//                String.class);
+        return "echo hello2 no more service ";
+    }
+
+
 
     @RequestMapping(value = "/notFound-feign", method = RequestMethod.GET)
     public String notFound() {
