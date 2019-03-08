@@ -28,7 +28,7 @@ class SampleRunner implements ApplicationRunner {
     String userName;
 
     @Value("${user.age}")
-    int userAge;
+    int  userAge;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
