@@ -1,3 +1,6 @@
+server:
+  port: 8010
+
 spring:
   cloud:
     nacos:
@@ -8,14 +11,19 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/audio
+    url: jdbc:mysql://127.0.0.1:3306/audio?useSSL=false
     username: root
     password: root
   redis:
     host: 127.0.0.1
 
-server:
-  port: 8010
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: springcloud123
+
+
 
 management:
   endpoints:

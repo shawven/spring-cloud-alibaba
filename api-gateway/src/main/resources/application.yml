@@ -13,9 +13,13 @@ zuul:
       path: /uaa/**
       serviceId: auth-server
       sensitiveHeaders:
-    order:
+    customer:
       path: /api/customer/**
       serviceId: service-customer
+      sensitiveHeaders:
+    provider:
+      path: /api/provider/**
+      serviceId: service-provider
       sensitiveHeaders:
   add-proxy-headers: true
 
@@ -25,10 +29,11 @@ security:
       access-token-uri: http://localhost:8888/uaa/oauth/token
       user-authorization-uri: http://localhost:8888/uaa/oauth/authorize
       client-id: app
-      client-secret: secret
     resource:
-      user-info-uri: http://localhost:8888//uaa/user
-      prefer-token-info: false
+#      user-info-uri: http://localhost:8888/uaa/user
+#      prefer-token-info: false
+      jwt:
+        key-value: springcloud123
 
 
 management:

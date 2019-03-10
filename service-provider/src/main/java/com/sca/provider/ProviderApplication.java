@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableResourceServer
@@ -24,7 +26,7 @@ public class ProviderApplication extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/echo/**", "/hello/**").permitAll()
+        http.authorizeRequests().antMatchers("/hello/**").permitAll()
                 .and().authorizeRequests().anyRequest().authenticated();
     }
 }
@@ -32,6 +34,11 @@ public class ProviderApplication extends ResourceServerConfigurerAdapter {
 
 @RestController
 class EchoController {
+    @RequestMapping(value = "/user")
+    public Principal user(Principal principal) {
+        return principal;
+    }
+
     @RequestMapping(value = "/echo/{string}", method = RequestMethod.GET)
     public String echo(@PathVariable String string) {
         System.out.println("service-provide1-echo: " + string);
@@ -40,7 +47,7 @@ class EchoController {
 
     @RequestMapping(value = "/hello/{string}", method = RequestMethod.GET)
     public String hello(@PathVariable String string) {
-        System.out.println("service-provide1-echo: " + string);
+        System.out.println("service-provide1-hello: " + string);
         return "service-provide1-hello: " + string;
     }
 }

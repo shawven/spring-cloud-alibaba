@@ -1,5 +1,6 @@
 package com.sca.customer;
 
+import com.sca.common.MyOAuth2FeignRequestInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -24,6 +25,12 @@ public class CustomerApplication extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().antMatchers("/echo-hello2/**", "/echo-hello12/**").permitAll()
                 .and().authorizeRequests().anyRequest().authenticated();
+    }
+
+
+    @Bean
+    public MyOAuth2FeignRequestInterceptor basicAuthRequestInterceptor() {
+        return new MyOAuth2FeignRequestInterceptor();
     }
 
     @FeignClient(name = "service-provider",
@@ -57,6 +64,7 @@ class FeignConfiguration {
 }
 
 class EchoServiceFallback implements CustomerApplication.EchoService {
+
     @Override
     public String echo(@PathVariable("str") String str) {
         return "echo fallback";
