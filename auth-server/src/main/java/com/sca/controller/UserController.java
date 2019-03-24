@@ -20,6 +20,10 @@ public class UserController {
     @GetMapping("/test")
     public String test(Principal user){
         System.out.println(user);
+        if (true) {
+            throw new RuntimeException("test");
+        }
+
         return "test";
     }
 }

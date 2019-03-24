@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,10 +46,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private BootOAuth2AuthExceptionEntryPoint bootOAuth2AuthExceptionEntryPoint;
 
     @Autowired
-    private BootAccessDeniedHandler bootAccessDeniedHandler;
+    private BootBasicAuthenticationFilter bootBasicAuthenticationFilter;
 
     @Autowired
-    private BootBasicAuthenticationFilter bootBasicAuthenticationFilter;
+    private BootAccessDeniedHandler bootAccessDeniedHandler;
+
 
     @Value("${security.oauth2.resource.jwt.key-value}")
     private String signKey;
@@ -73,7 +75,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("app")
                 .secret(passwordEncoder.encode("secret"))
                 .scopes("all")
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token");
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
+        ;
     }
 
     @Override
@@ -85,7 +88,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .userDetailsService(userDetailsService)
                 .authenticationManager(authenticationManager)
                 .exceptionTranslator(bootWebResponseExceptionTranslator)
-                .pathMapping("/oauth/confirm_access","/custom/confirm_access");
+        ;
 
     }
 
@@ -101,9 +104,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         tokenServices.setTokenEnhancer(jwtTokenConverter());
         tokenServices.setSupportRefreshToken(true);
         // token有效期自定义设置，默认2小时
-        tokenServices.setAccessTokenValiditySeconds(60 * 60 * 2);
+        tokenServices.setAccessTokenValiditySeconds(30);
         //默认30天，这里修改
-        tokenServices.setRefreshTokenValiditySeconds(60 * 60 * 24 * 7);
+        tokenServices.setRefreshTokenValiditySeconds(60);
         return tokenServices;
     }
 
@@ -114,8 +117,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .checkTokenAccess("isAuthenticated()")
                 .accessDeniedHandler(bootAccessDeniedHandler)
                 .authenticationEntryPoint(bootOAuth2AuthExceptionEntryPoint)
-                .addTokenEndpointAuthenticationFilter(bootBasicAuthenticationFilter);
-
+                .addTokenEndpointAuthenticationFilter(bootBasicAuthenticationFilter)
+        ;
     }
 
 
