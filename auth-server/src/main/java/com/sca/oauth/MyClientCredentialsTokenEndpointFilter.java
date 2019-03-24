@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author XW
  * @since 2019-03-23 23:30
  */
-class MyClientCredentialsTokenEndpointFilter extends ClientCredentialsTokenEndpointFilter {
+public class MyClientCredentialsTokenEndpointFilter extends ClientCredentialsTokenEndpointFilter {
 
     @Autowired
     private BootOAuth2AuthExceptionEntryPoint bootOAuth2AuthExceptionEntryPoint;
